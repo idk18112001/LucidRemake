@@ -5,20 +5,25 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 # Set up logging for debugging
 logging.basicConfig(level=logging.DEBUG)
 
-# Create the Flask app
-app = Flask(__name__, 
-           template_folder='templates', 
-           static_folder='../public/static',
-           static_url_path='/static')
+# Create the Flask app with absolute paths
+app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        app.logger.error(f'Error rendering index.html: {e}')
+        return f'<h1>LucidQuant</h1><p>App is running but template error: {e}</p>'
 
 @app.route('/health')
 def health_check():
-    return {'status': 'ok', 'message': 'LucidQuant is running!'}
+    return {'status': 'ok', 'message': 'LucidQuant Flask app is running!'}
+
+@app.route('/test')
+def test():
+    return '<h1>LucidQuant Test</h1><p>Flask app is working!</p>'
 
 @app.route('/explore')
 def explore():
