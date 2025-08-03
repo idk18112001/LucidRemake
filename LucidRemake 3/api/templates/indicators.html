@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Navigation Header -->
+<div class="page-header animate-fade-in">
+    <div class="nav-breadcrumb">
+        <a href="{{ url_for('explore') }}" class="breadcrumb-link">← Back to Explore</a>
+    </div>
+    <h1 class="page-title">Indicators</h1>
+    <p class="page-subtitle">Unconventional signals that reveal market opportunities before they become mainstream</p>
+</div>
+
+<!-- Indicators Grid -->
+<div class="data-grid animate-fade-in">
+    {% if indicators %}
+        {% for indicator in indicators %}
+        <a href="{{ url_for('indicator_detail', indicator_id=loop.index) }}" class="data-card">
+            <div class="card-header">
+                <h3 class="card-title">{{ indicator.name }}</h3>
+                <span class="trend-indicator trend-{{ indicator.trend }}">
+                    {% if indicator.trend == 'up' %}↗{% elif indicator.trend == 'down' %}↘{% else %}→{% endif %}
+                </span>
+            </div>
+            <p class="card-description">{{ indicator.description }}</p>
+            <div class="card-meta">
+                <span class="category">{{ indicator.category }}</span>
+                <span class="value">{{ "%.2f"|format(indicator.current_value) if indicator.current_value else 'N/A' }}</span>
+            </div>
+            <div class="card-hover-indicator">
+                <span>Analyze →</span>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-chart-line empty-icon"></i>
+            <h3>No Indicators Available</h3>
+            <p>Check back later for market indicators data.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

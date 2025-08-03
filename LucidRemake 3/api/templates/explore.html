@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Page Logo -->
+<div class="page-logo animate-fade-in">
+    <h1>LucidQuant</h1>
+</div>
+
+<!-- Split View -->
+<div class="explore-split">
+    <!-- Left Half - Indicators -->
+    <a href="{{ url_for('indicators') }}" class="explore-half">
+        <div class="explore-content">
+            <div class="explore-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h2 class="explore-title">Indicators</h2>
+            <p class="explore-description">
+                Unconventional signals that reveal market opportunities before they become mainstream
+            </p>
+        </div>
+        
+        <!-- Animated Background Pattern -->
+        <div class="bg-pattern circle"></div>
+    </a>
+
+    <!-- Right Half - Metrics -->
+    <a href="{{ url_for('metrics') }}" class="explore-half">
+        <div class="explore-content">
+            <div class="explore-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h2 class="explore-title">Metrics</h2>
+            <p class="explore-description">
+                Alternative data points that traditional analysis overlooks, giving you the edge
+            </p>
+        </div>
+        
+        <!-- Animated Background Pattern -->
+        <div class="bg-pattern square"></div>
+    </a>
+</div>
+{% endblock %}

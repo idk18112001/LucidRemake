@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Navigation Header -->
+<div class="page-header animate-fade-in">
+    <div class="nav-breadcrumb">
+        <a href="{{ url_for('indicators') }}" class="breadcrumb-link">← Back to Indicators</a>
+    </div>
+    <h1 class="page-title">{{ indicator.name }}</h1>
+    <div class="indicator-status">
+        <span class="trend-indicator trend-{{ indicator.trend }}">
+            {% if indicator.trend == 'up' %}↗ Trending Up{% elif indicator.trend == 'down' %}↘ Trending Down{% else %}→ Stable{% endif %}
+        </span>
+        <span class="current-value">{{ "%.2f"|format(indicator.current_value) if indicator.current_value else 'N/A' }}</span>
+    </div>
+</div>
+
+<!-- Indicator Analysis -->
+<div class="detail-container animate-fade-in">
+    <!-- Definition Section -->
+    <div class="analysis-section">
+        <h2 class="section-title">Definition</h2>
+        <div class="section-content">
+            <p>{{ indicator.description }}</p>
+            <div class="indicator-category">
+                <span class="category">{{ indicator.category }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Trend Section -->
+    <div class="analysis-section">
+        <h2 class="section-title">Current Trend</h2>
+        <div class="section-content">
+            {% if indicator.trend == 'up' %}
+                <p>Currently showing increased activity, suggesting positive market sentiment. This upward trend typically indicates growing investor confidence and potential opportunities in related sectors.</p>
+            {% elif indicator.trend == 'down' %}
+                <p>Currently showing decreased activity, suggesting cautious market sentiment. This downward trend may indicate market uncertainty and potential defensive positioning opportunities.</p>
+            {% else %}
+                <p>Currently showing stable activity with minimal volatility. This stable trend suggests market equilibrium and balanced investor sentiment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Investment Implications -->
+    <div class="analysis-section">
+        <h2 class="section-title">Investment Implications</h2>
+        <div class="implications-grid">
+            <div class="implication-card bullish">
+                <h4>Bullish Indicators</h4>
+                <ul>
+                    <li>Technology stocks</li>
+                    <li>Growth companies</li>
+                    <li>High-beta stocks</li>
+                    <li>Emerging markets</li>
+                </ul>
+            </div>
+            <div class="implication-card bearish">
+                <h4>Bearish Indicators</h4>
+                <ul>
+                    <li>Defensive stocks</li>
+                    <li>Utilities sector</li>
+                    <li>Consumer staples</li>
+                    <li>Government bonds</li>
+                </ul>
+            </div>
+        </div>
+        <div class="reasoning">
+            <h4>Reasoning</h4>
+            <p>When this indicator shows {{ indicator.trend }} movement, it typically favors certain asset classes over others based on historical correlations and market behavior patterns.</p>
+        </div>
+    </div>
+
+    <!-- Stock Analysis Tool -->
+    <div class="analysis-section">
+        <h2 class="section-title">Analyze Stock</h2>
+        <div class="stock-analyzer">
+            <p class="analyzer-description">Search for a stock to see how it correlates with this indicator</p>
+            <div class="search-container">
+                <input type="text" class="stock-search" placeholder="Enter stock symbol (e.g., AAPL, TSLA, NVDA)" />
+                <button class="analyze-btn">Analyze Stock</button>
+            </div>
+            <div class="analysis-result" id="analysisResult" style="display: none;">
+                <div class="result-header">
+                    <h4 id="stockSymbol"></h4>
+                    <span class="correlation-score" id="correlationScore"></span>
+                </div>
+                <p id="correlationDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Placeholder -->
+    <div class="analysis-section">
+        <h2 class="section-title">Live Trend Data</h2>
+        <div class="chart-container">
+            <div class="time-selector">
+                <button class="time-btn active" data-period="1M">1M</button>
+                <button class="time-btn" data-period="3M">3M</button>
+                <button class="time-btn" data-period="6M">6M</button>
+                <button class="time-btn" data-period="1Y">1Y</button>
+                <button class="time-btn" data-period="2Y">2Y</button>
+            </div>
+            <div class="chart-placeholder">
+                <i class="fas fa-chart-line chart-icon"></i>
+                <p>Chart visualization would display real financial data</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

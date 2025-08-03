@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Navigation Header -->
+<div class="page-header animate-fade-in">
+    <div class="nav-breadcrumb">
+        <a href="{{ url_for('metrics') }}" class="breadcrumb-link">← Back to Metrics</a>
+    </div>
+    <h1 class="page-title">{{ metric.name }}</h1>
+    <div class="indicator-status">
+        <span class="trend-indicator trend-{{ metric.trend }}">
+            {% if metric.trend == 'up' %}↗ Trending Up{% elif metric.trend == 'down' %}↘ Trending Down{% else %}→ Stable{% endif %}
+        </span>
+        <span class="current-value">{{ "%.2f"|format(metric.current_value) if metric.current_value else 'N/A' }}</span>
+        {% if metric.change_percentage %}
+        <span class="change change-{{ 'positive' if metric.change_percentage > 0 else 'negative' if metric.change_percentage < 0 else 'neutral' }}">
+            {{ "%.1f"|format(metric.change_percentage) }}%
+        </span>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Metric Analysis -->
+<div class="detail-container animate-fade-in">
+    <!-- Definition Section -->
+    <div class="analysis-section">
+        <h2 class="section-title">Definition</h2>
+        <div class="section-content">
+            <p>{{ metric.description }}</p>
+        </div>
+    </div>
+
+    <!-- Current Trend Section -->
+    <div class="analysis-section">
+        <h2 class="section-title">Current Trend</h2>
+        <div class="section-content">
+            {% if metric.trend == 'up' %}
+                <p>Currently showing increased activity with a {{ "%.1f"|format(metric.change_percentage) }}% change. This upward movement suggests heightened market participation and potential shifts in investor behavior.</p>
+            {% elif metric.trend == 'down' %}
+                <p>Currently showing decreased activity with a {{ "%.1f"|format(metric.change_percentage) }}% change. This downward movement may indicate reduced market participation or changing investment patterns.</p>
+            {% else %}
+                <p>Currently showing stable activity with minimal change. This stable trend suggests consistent market behavior and balanced investor participation.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Investment Implications -->
+    <div class="analysis-section">
+        <h2 class="section-title">Investment Implications</h2>
+        <div class="implications-grid">
+            <div class="implication-card bullish">
+                <h4>Positive Signals</h4>
+                <ul>
+                    {% if 'Promoter' in metric.name %}
+                        <li>Strong promoter confidence</li>
+                        <li>Long-term growth prospects</li>
+                        <li>Stable management commitment</li>
+                        <li>Reduced dilution risk</li>
+                    {% elif 'Bulk' in metric.name %}
+                        <li>Institutional interest</li>
+                        <li>Large investor confidence</li>
+                        <li>Potential price support</li>
+                        <li>Market depth improvement</li>
+                    {% elif 'Insider' in metric.name %}
+                        <li>Management confidence</li>
+                        <li>Positive internal outlook</li>
+                        <li>Aligned interests</li>
+                        <li>Growth expectations</li>
+                    {% else %}
+                        <li>High market liquidity</li>
+                        <li>Active investor interest</li>
+                        <li>Price discovery efficiency</li>
+                        <li>Reduced bid-ask spreads</li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="implication-card bearish">
+                <h4>Cautionary Signals</h4>
+                <ul>
+                    {% if 'Promoter' in metric.name %}
+                        <li>Potential funding needs</li>
+                        <li>Diversification strategy</li>
+                        <li>Regulatory compliance</li>
+                        <li>Capital restructuring</li>
+                    {% elif 'Bulk' in metric.name %}
+                        <li>Large block sales</li>
+                        <li>Exit strategies</li>
+                        <li>Price pressure potential</li>
+                        <li>Market timing concerns</li>
+                    {% elif 'Insider' in metric.name %}
+                        <li>Profit-taking activity</li>
+                        <li>Personal liquidity needs</li>
+                        <li>Market timing</li>
+                        <li>Regulatory requirements</li>
+                    {% else %}
+                        <li>Potential volatility</li>
+                        <li>Market sentiment shifts</li>
+                        <li>Liquidity concerns</li>
+                        <li>Institutional rebalancing</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="reasoning">
+            <h4>Reasoning</h4>
+            <p>{% if 'Volume' in metric.name %}Higher trading volumes typically indicate increased market interest and better price discovery, while lower volumes may suggest reduced liquidity and potential price gaps.{% else %}Changes in {{ metric.name|lower }} often reflect shifting market dynamics and can provide early signals of potential price movements and investment opportunities.{% endif %}</p>
+        </div>
+    </div>
+
+    <!-- Stock Analysis Tool -->
+    <div class="analysis-section">
+        <h2 class="section-title">Analyze Stock</h2>
+        <div class="stock-analyzer">
+            <p class="analyzer-description">Search for a stock to see how it correlates with this metric</p>
+            <div class="search-container">
+                <input type="text" class="stock-search" placeholder="Enter stock symbol (e.g., AAPL, TSLA, NVDA)" />
+                <button class="analyze-btn">Analyze Stock</button>
+            </div>
+            <div class="analysis-result" id="analysisResult" style="display: none;">
+                <div class="result-header">
+                    <h4 id="stockSymbol"></h4>
+                    <span class="correlation-score" id="correlationScore"></span>
+                </div>
+                <p id="correlationDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Placeholder -->
+    <div class="analysis-section">
+        <h2 class="section-title">Live Trend Data</h2>
+        <div class="chart-container">
+            <div class="time-selector">
+                <button class="time-btn active" data-period="1M">1M</button>
+                <button class="time-btn" data-period="3M">3M</button>
+                <button class="time-btn" data-period="6M">6M</button>
+                <button class="time-btn" data-period="1Y">1Y</button>
+                <button class="time-btn" data-period="2Y">2Y</button>
+            </div>
+            <div class="chart-placeholder">
+                <i class="fas fa-chart-line chart-icon"></i>
+                <p>Chart visualization would display real financial data</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

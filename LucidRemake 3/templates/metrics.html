@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Navigation Header -->
+<div class="page-header animate-fade-in">
+    <div class="nav-breadcrumb">
+        <a href="{{ url_for('explore') }}" class="breadcrumb-link">← Back to Explore</a>
+    </div>
+    <h1 class="page-title">Metrics</h1>
+    <p class="page-subtitle">Alternative data points that traditional analysis overlooks, giving you the edge</p>
+</div>
+
+<!-- Metrics Grid -->
+<div class="data-grid animate-fade-in">
+    {% if metrics %}
+        {% for metric in metrics %}
+        <a href="{{ url_for('metric_detail', metric_id=loop.index) }}" class="data-card">
+            <div class="card-header">
+                <h3 class="card-title">{{ metric.name }}</h3>
+                <span class="trend-indicator trend-{{ metric.trend }}">
+                    {% if metric.trend == 'up' %}↗{% elif metric.trend == 'down' %}↘{% else %}→{% endif %}
+                </span>
+            </div>
+            <p class="card-description">{{ metric.description }}</p>
+            <div class="card-meta">
+                <span class="value">{{ "%.2f"|format(metric.current_value) if metric.current_value else 'N/A' }}</span>
+                {% if metric.change_percentage %}
+                <span class="change change-{{ 'positive' if metric.change_percentage > 0 else 'negative' if metric.change_percentage < 0 else 'neutral' }}">
+                    {{ "%.1f"|format(metric.change_percentage) }}%
+                </span>
+                {% endif %}
+            </div>
+            <div class="card-hover-indicator">
+                <span>Analyze →</span>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-chart-bar empty-icon"></i>
+            <h3>No Metrics Available</h3>
+            <p>Check back later for market metrics data.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
