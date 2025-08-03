@@ -1,30 +1,13 @@
 import os
 import logging
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 # Set up logging for debugging
 logging.basicConfig(level=logging.DEBUG)
 
-class Base(DeclarativeBase):
-    pass
-
-db = SQLAlchemy(model_class=Base)
-
 # Create the Flask app
 app = Flask(__name__, template_folder='./templates', static_folder='../public/static')
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
-
-# Configure the database
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_recycle": 300,
-    "pool_pre_ping": True,
-}
-
-# Initialize the database extension
-db.init_app(app)
 
 @app.route('/')
 def index():
@@ -130,9 +113,8 @@ def not_found_error(error):
 def internal_error(error):
     return redirect(url_for('index'))
 
-# For Vercel, we need to export the app
-def handler(request):
-    return app(request.environ, lambda status, headers: None)
+# For Vercel, we need to export the app as 'app'
+# Vercel will automatically use the 'app' variable
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
