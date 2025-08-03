@@ -6,12 +6,19 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 logging.basicConfig(level=logging.DEBUG)
 
 # Create the Flask app
-app = Flask(__name__, template_folder='./templates', static_folder='../public/static')
+app = Flask(__name__, 
+           template_folder='templates', 
+           static_folder='../public/static',
+           static_url_path='/static')
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/health')
+def health_check():
+    return {'status': 'ok', 'message': 'LucidQuant is running!'}
 
 @app.route('/explore')
 def explore():
@@ -107,11 +114,15 @@ def signup():
 
 @app.errorhandler(404)
 def not_found_error(error):
-    return redirect(url_for('index'))
+    # Log the error for debugging
+    app.logger.error(f'404 error: {error}')
+    return render_template('index.html'), 404
 
 @app.errorhandler(500)
 def internal_error(error):
-    return redirect(url_for('index'))
+    # Log the error for debugging  
+    app.logger.error(f'500 error: {error}')
+    return render_template('index.html'), 500
 
 # For Vercel, we need to export the app as 'app'
 # Vercel will automatically use the 'app' variable
